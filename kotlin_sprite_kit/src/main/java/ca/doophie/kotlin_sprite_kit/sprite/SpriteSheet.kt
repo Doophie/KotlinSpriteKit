@@ -19,6 +19,8 @@ class SpriteSheet(
         rowNum to numColumns
     }.toMap()
 
+    var defaultRow: Int = 0
+
     // keep track of which image to display
     private var currentRow: Int = 0
     private var currentColumn: Int = 0
@@ -29,6 +31,8 @@ class SpriteSheet(
 
     private val frameHeight: Int
         get() = image.height / numRows
+
+    private var animRepeatRemaining: Int = 0
 
     // goes to the next available sprite, loops back if at the end of a row, and returns a cropped
     // bitmap of that sprite
@@ -58,7 +62,15 @@ class SpriteSheet(
     }
 
     private fun incrementColumn() {
+        val lastColumn = currentColumn
         currentColumn = (currentColumn + 1) % individualColumnLengths[currentRow]!!
+
+        if (currentColumn < lastColumn && animRepeatRemaining > 0) {
+            animRepeatRemaining -= 1
+            if (animRepeatRemaining <= 0) {
+                currentRow = defaultRow
+            }
+        }
     }
 
     private fun buildFrame(): Bitmap {
@@ -71,5 +83,10 @@ class SpriteSheet(
         frameToDraw.bottom = frameToDraw.top + frameHeight
 
         return image.cropped(frameToDraw)
+    }
+
+    fun playRowAnimation(row: Int, repeat: Int = 1) {
+        setActiveRow(row)
+        animRepeatRemaining = repeat
     }
 }

@@ -18,10 +18,46 @@
 
     <ca.doophie.kotlin_sprite_kit.views.Joystick
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:alpha="0.5"
         android:id="@+id/joystick"
-        android:layout_width="100dp"
-        android:layout_height="100dp"/>
+        android:layout_width="150dp"
+        android:layout_height="150dp"/>
+
+    <Button
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="40dp"
+        android:id="@+id/aButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:text="A"/>
+
+    <Button
+        app:layout_constraintBottom_toTopOf="@id/aButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="12dp"
+        android:id="@+id/bButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:text="B"/>
+
+    <Button
+        app:layout_constraintBottom_toTopOf="@id/yButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="32dp"
+        android:id="@+id/xButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:text="X"/>
+
+    <Button
+        app:layout_constraintBottom_toTopOf="@id/aButton"
+        app:layout_constraintEnd_toStartOf="@id/bButton"
+        android:layout_marginEnd="12dp"
+        android:id="@+id/yButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:text="Y"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

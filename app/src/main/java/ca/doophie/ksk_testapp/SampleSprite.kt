@@ -51,4 +51,8 @@ class SampleSprite(resources: Resources): Sprite() {
         if (spriteSheet.getActiveRow() != animation.row)
             spriteSheet.setActiveRow(animation.row)
     }
+
+    fun playAnimation(animations: SampleSprite.Animations) {
+        spriteSheet.playRowAnimation(animations.row)
+    }
 }

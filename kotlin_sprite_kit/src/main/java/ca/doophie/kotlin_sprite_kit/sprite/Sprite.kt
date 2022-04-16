@@ -3,6 +3,7 @@ package ca.doophie.kotlin_sprite_kit.sprite
 import android.graphics.Bitmap
 import android.graphics.Point
 import ca.doophie.kotlin_sprite_kit.engine.Ticker
+import ca.doophie.kotlin_sprite_kit.extensions.flipped
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin
@@ -24,6 +25,8 @@ abstract class Sprite: Ticker.TickSubscriber {
     private var movementAngle: Double = 0.0
 
     private var movespeed: Int = 25
+
+    var flipImage: Boolean = false
 
     // todo: Update sprite location
     fun moveSprite(strength: Double, angle: Double) {
@@ -56,7 +59,12 @@ abstract class Sprite: Ticker.TickSubscriber {
         // if the number of frames since last update exceeds the number of desired empty frames,
         // move on to the next frame
         if (framesSinceLastUpdate >= emptyFrames) {
-            image = spriteSheet.nextFrame()
+            val nextImage = spriteSheet.nextFrame()
+
+            image = if (flipImage)
+                nextImage.flipped
+            else
+                nextImage
 
             framesSinceLastUpdate = 0
         }
