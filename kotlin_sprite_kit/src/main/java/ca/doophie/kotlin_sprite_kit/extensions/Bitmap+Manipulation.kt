@@ -14,3 +14,7 @@ val Bitmap.flipped: Bitmap?
 fun Bitmap.cropped(rect: Rect): Bitmap {
     return Bitmap.createBitmap(this, rect.left, rect.top, rect.right-rect.left, rect.bottom-rect.top)
 }
+
+fun Bitmap.scale(amount: Double): Bitmap {
+    return Bitmap.createScaledBitmap(this, (this.width * amount).toInt(), (this.height * amount).toInt(), false)
+}

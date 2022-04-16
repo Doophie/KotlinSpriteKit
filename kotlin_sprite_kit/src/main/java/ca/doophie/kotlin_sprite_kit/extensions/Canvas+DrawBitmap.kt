@@ -1,16 +1,17 @@
 package ca.doophie.kotlin_sprite_kit.extensions
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Point
-import android.graphics.Rect
+import android.graphics.*
+import ca.doophie.kotlin_sprite_kit.engine.Camera
 
 /**
  * Draws a bitmap at the specified location
  */
-fun Canvas.drawBitmap(bitmap: Bitmap, location: Point = Point(0, 0)) {
+fun Canvas.drawBitmap(bitmap: Bitmap, location: Point = Point(0, 0), camera: Camera) {
     this.drawBitmap(bitmap,
         null,
-        Rect(location.x, location.y, location.x + bitmap.width, location.y + bitmap.height),
+        Rect(location.x - camera.position.x,
+            location.y - camera.position.y,
+            location.x + bitmap.width - camera.position.x,
+            location.y + bitmap.height - camera.position.y),
         null)
 }

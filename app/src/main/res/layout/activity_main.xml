@@ -19,8 +19,9 @@
     <ca.doophie.kotlin_sprite_kit.views.Joystick
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:alpha="0.5"
         android:id="@+id/joystick"
-        android:layout_width="300dp"
-        android:layout_height="300dp"/>
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
