@@ -1,13 +1,11 @@
 package ca.doophie.kotlin_sprite_kit.views
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.PixelFormat
-import android.graphics.PorterDuff
+import android.graphics.*
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceView
 import android.view.View
@@ -19,6 +17,10 @@ import kotlin.math.pow
 
 class Joystick(context: Context, attributes: AttributeSet):
     SurfaceView(context, attributes), View.OnTouchListener {
+
+    companion object {
+        private const val TAG = "Joystick"
+    }
 
     interface JoystickMovementCallbacks {
         fun onMove(strength: Double, angle: Double)
@@ -39,8 +41,8 @@ class Joystick(context: Context, attributes: AttributeSet):
 
     init {
         val ta = getContext().obtainStyledAttributes(attributes, R.styleable.Joystick)
-        padColor = ContextCompat.getColor(context, ta.getResourceId(R.styleable.Joystick_stickBackground, android.R.color.holo_green_light))
-        stickColor = ContextCompat.getColor(context, ta.getResourceId(R.styleable.Joystick_stickForeground, android.R.color.holo_green_dark))
+        padColor = ContextCompat.getColor(context, ta.getResourceId(R.styleable.Joystick_stickBackground, android.R.color.darker_gray))
+        stickColor = ContextCompat.getColor(context, ta.getResourceId(R.styleable.Joystick_stickForeground, android.R.color.white))
         ta.recycle()
     }
 
@@ -121,7 +123,9 @@ class Joystick(context: Context, attributes: AttributeSet):
             holder.unlockCanvasAndPost(myCanvas)
 
             movementCallbacks?.onMove(calculateStrength(newX, newY), calculateAngle(newX, newY))
-        } catch (e: Exception) { }
+        } catch (e: Exception) {
+            Log.e(TAG, "DrawJoystick failed: $e")
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -143,8 +147,8 @@ class Joystick(context: Context, attributes: AttributeSet):
         return hyp/baseRadius
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
 
         drawJoystick(centerX, centerY)
     }

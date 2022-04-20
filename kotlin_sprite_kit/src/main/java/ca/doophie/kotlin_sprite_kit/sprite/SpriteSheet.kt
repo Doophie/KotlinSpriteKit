@@ -33,6 +33,8 @@ class SpriteSheet(
         get() = image.height / numRows
 
     private var animRepeatRemaining: Int = 0
+    private var isAnimationLocked: Boolean = false
+    private var animationCompleteCallback: ()->Unit = {}
 
     // goes to the next available sprite, loops back if at the end of a row, and returns a cropped
     // bitmap of that sprite
@@ -49,6 +51,10 @@ class SpriteSheet(
     fun setActiveRow(row: Int) {
         if (row < 0 || row > numRows) {
             throw Exception("Invalid row")
+        }
+
+        if (isAnimationLocked) {
+            return
         }
 
         currentColumn = 0
@@ -69,6 +75,9 @@ class SpriteSheet(
             animRepeatRemaining -= 1
             if (animRepeatRemaining <= 0) {
                 currentRow = defaultRow
+                isAnimationLocked = false
+                animationCompleteCallback()
+                animationCompleteCallback = {}
             }
         }
     }
@@ -85,8 +94,17 @@ class SpriteSheet(
         return image.cropped(frameToDraw)
     }
 
-    fun playRowAnimation(row: Int, repeat: Int = 1) {
+    /***
+     * Plays the animation of a given row, default row will be activated upon the animation ending
+     * @param row - the row to play the animation from
+     * @param repeat - the number of times to play the animation
+     * @param lock - if true, prevents the row from changing until the animation is complete
+     * @param callback - will be called once all repetitions of the animation are complete
+     */
+    fun playRowAnimation(row: Int, repeat: Int = 1, lock: Boolean = true, callback: ()->Unit = {}) {
         setActiveRow(row)
+        isAnimationLocked = lock
         animRepeatRemaining = repeat
+        animationCompleteCallback = callback
     }
 }
