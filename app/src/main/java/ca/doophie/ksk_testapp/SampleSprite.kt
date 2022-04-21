@@ -1,7 +1,7 @@
 package ca.doophie.ksk_testapp
 
 import android.content.res.Resources
-import android.util.Size
+import android.util.Log
 import ca.doophie.kotlin_sprite_kit.extensions.bitmap
 import ca.doophie.kotlin_sprite_kit.extensions.scale
 import ca.doophie.kotlin_sprite_kit.sprite.Sprite
@@ -10,9 +10,15 @@ import ca.doophie.kotlin_sprite_kit.sprite.SpriteSheet
 
 class SampleSprite(resources: Resources): Sprite() {
 
+    companion object {
+        private const val TAG = "SampleSprite"
+    }
+
+    private var isSwinging: Boolean = false
+
     // each row in the sprite sheet represents an animation
     // this enum maps the row to the animation
-    enum class Animations(val row: Int) {
+    enum class Animation(val row: Int) {
         IDLE(0),
         WALK(1),
         SWING_1(2),
@@ -46,13 +52,30 @@ class SampleSprite(resources: Resources): Sprite() {
     }
 
     // a custom method for setting the active animation of this sprite
-    fun setAnimation(animation: Animations) {
+    fun setAnimation(animation: Animation) {
         // setting the active row resets the column to 0, so only set it if its changed
         if (spriteSheet.getActiveRow() != animation.row)
             spriteSheet.setActiveRow(animation.row)
     }
 
-    fun playAnimation(animations: SampleSprite.Animations) {
-        spriteSheet.playRowAnimation(animations.row)
+    override fun collision(sprite: Sprite) {
+        Log.d(TAG, "Collided with sprite: ${sprite.name}")
+
+        if (isSwinging) {
+            (sprite as SampleSprite).playAnimation(Animation.DIE)
+        }
+    }
+
+    fun playAnimation(animation: Animation) {
+        if (animation == Animation.STAB) {
+            isSwinging = true
+        }
+
+        spriteSheet.playRowAnimation(animation.row) {
+            // do something
+            Log.d(TAG, "${animation.name} complete")
+
+            isSwinging = false
+        }
     }
 }

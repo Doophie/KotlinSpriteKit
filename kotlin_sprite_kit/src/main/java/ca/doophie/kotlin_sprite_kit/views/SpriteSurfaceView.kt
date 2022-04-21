@@ -3,11 +3,14 @@ package ca.doophie.kotlin_sprite_kit.views
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.SurfaceView
 import ca.doophie.kotlin_sprite_kit.engine.Camera
+import ca.doophie.kotlin_sprite_kit.engine.CollisionHandler
 import ca.doophie.kotlin_sprite_kit.engine.Ticker
 import ca.doophie.kotlin_sprite_kit.extensions.drawBitmap
 import ca.doophie.kotlin_sprite_kit.sprite.Sprite
+import java.lang.IllegalStateException
 
 class SpriteSurfaceView(context: Context, attributeSet: AttributeSet) :
     SurfaceView(context, attributeSet), Ticker.TickSubscriber {
@@ -17,6 +20,8 @@ class SpriteSurfaceView(context: Context, attributeSet: AttributeSet) :
     }
 
     private val ticker = Ticker()
+
+    private val collisionHandler: CollisionHandler = CollisionHandler()
 
     fun pause() {
         ticker.pause()
@@ -56,6 +61,8 @@ class SpriteSurfaceView(context: Context, attributeSet: AttributeSet) :
     }
 
     override fun tick(fps: Int): Boolean {
+        collisionHandler.checkForCollisions(sprites.filter { it.isCollider })
+
         if (holder.surface.isValid) {
             canvas = holder.lockCanvas()
 
@@ -71,7 +78,11 @@ class SpriteSurfaceView(context: Context, attributeSet: AttributeSet) :
                 }
             }
 
-            holder.unlockCanvasAndPost(canvas)
+            try {
+                holder.unlockCanvasAndPost(canvas)
+            } catch (e: IllegalStateException) {
+                Log.e(TAG, e.message ?: "Failed to draw surface")
+            }
         }
 
         return true

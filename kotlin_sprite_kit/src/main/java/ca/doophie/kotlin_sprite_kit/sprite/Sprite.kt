@@ -16,6 +16,8 @@ abstract class Sprite: Ticker.TickSubscriber {
     private var framesToDisplayPerSecond = 10
     private var framesSinceLastUpdate = 0
 
+    var isCollider: Boolean = true
+
     // the current image to display for this sprite
     var image: Bitmap? = null
 
@@ -28,10 +30,13 @@ abstract class Sprite: Ticker.TickSubscriber {
 
     var flipImage: Boolean = false
 
-    // todo: Update sprite location
     fun moveSprite(strength: Double, angle: Double) {
         movementStrength = strength
         movementAngle = angle
+    }
+
+    open fun collision(sprite: Sprite) {
+
     }
 
     // handle the game tick

@@ -32,7 +32,7 @@ class Camera : Ticker.TickSubscriber {
     private var spriteToFollow: Sprite? = null
     private var outerBounds: Rect? = null
 
-    fun trackSprite(sprite: Sprite, toBounds: Rect) {
+    fun trackSprite(sprite: Sprite, toBounds: Rect? = null) {
         spriteToFollow = sprite
         outerBounds = toBounds
     }

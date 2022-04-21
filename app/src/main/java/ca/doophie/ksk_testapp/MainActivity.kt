@@ -1,5 +1,6 @@
 package ca.doophie.ksk_testapp
 
+import android.graphics.Point
 import android.graphics.Rect
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,8 +11,7 @@ import ca.doophie.kotlin_sprite_kit.extensions.scale
 import ca.doophie.kotlin_sprite_kit.views.Joystick
 import ca.doophie.ksk_testapp.databinding.ActivityMainBinding
 import android.util.DisplayMetrics
-
-
+import ca.doophie.kotlin_sprite_kit.other.ScreenMetricsCompat
 
 
 class MainActivity : AppCompatActivity() {
@@ -25,9 +25,13 @@ class MainActivity : AppCompatActivity() {
 
         val background = resources.bitmap(R.drawable.demo_background)!!.scale(3.0)
         val sampleSprite = SampleSprite(resources)
+        val sampleSprite2 = SampleSprite(resources)
+
+        sampleSprite2.position = Point(600, 600)
 
         // add sample sprite to the sprite surface view
         binding.spriteSurface.addSprite(sampleSprite)
+        binding.spriteSurface.addSprite(sampleSprite2)
 
         // set the background
         binding.spriteSurface.background = background
@@ -36,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         binding.spriteSurface.setCamera(gameCamera)
 
         // set up the camera and make it track the sample sprite
-        gameCamera.viewableArea = Size(getScreenDimens().width, getScreenDimens().height)
+        gameCamera.viewableArea = Size(ScreenMetricsCompat.getScreenSize(this).width, ScreenMetricsCompat.getScreenSize(this).height)
         gameCamera.trackSprite(sampleSprite, toBounds = Rect(0, 0, background.width, background.height))
 
         // track movements on the joystick
@@ -47,25 +51,16 @@ class MainActivity : AppCompatActivity() {
 
                 // set the sprites animation based on if its moving or not
                 if (strength > 0) {
-                    sampleSprite.setAnimation(SampleSprite.Animations.WALK)
+                    sampleSprite.setAnimation(SampleSprite.Animation.WALK)
                     sampleSprite.flipImage = !(angle < 90 || angle > 270)
                 } else {
-                    sampleSprite.setAnimation(SampleSprite.Animations.IDLE)
+                    sampleSprite.setAnimation(SampleSprite.Animation.IDLE)
                 }
             }
         }
 
         binding.aButton.setOnClickListener {
-            sampleSprite.playAnimation(SampleSprite.Animations.STAB)
+            sampleSprite.playAnimation(SampleSprite.Animation.STAB)
         }
-    }
-
-    fun getScreenDimens() : Size {
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        val height = displayMetrics.heightPixels
-        val width = displayMetrics.widthPixels
-
-        return Size(width, height)
     }
 }
